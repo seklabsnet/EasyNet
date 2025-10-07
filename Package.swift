@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "EasyNet",
-    platforms: [.iOS(.v18)],
+    platforms: [.iOS(.v18), .macOS(.v15)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
@@ -14,14 +14,15 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.10.0"))
+        .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.10.2"))
     ],
     targets: [
         .target(
             name: "EasyNet",
             dependencies: [
                 .product(name: "Alamofire", package: "Alamofire")
-            ]
-        ),
+            ],
+            path: "Sources/EasyNet"
+        )
     ]
 )

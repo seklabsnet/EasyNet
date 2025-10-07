@@ -8,6 +8,14 @@
 import Foundation
 import Alamofire
 
+// MARK: - Encodable Extension
+extension Encodable {
+    func asDictionary() -> [String: Any]? {
+        guard let data = try? JSONEncoder().encode(self) else { return nil }
+        return try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any]
+    }
+}
+
 public final class NetworkServiceProvider<R: Encodable & Sendable>: URLRequestConvertible {
     private let baseUrl: String
     private let path: String
