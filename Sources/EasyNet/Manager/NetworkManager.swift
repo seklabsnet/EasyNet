@@ -93,6 +93,12 @@ public struct NetworkManager: NetworkManagerProtocol {
         case .responseSerializationFailed:
             return .decodingFailed(error, responseData)
 
+        case .sessionTaskFailed(let urlError as URLError) where urlError.code == .notConnectedToInternet:
+            return .noInternet
+
+        case .explicitlyCancelled:
+            return .cancelled
+
         default:
             return .requestFailed(error, responseData)
         }

@@ -48,6 +48,16 @@ struct NetworkErrorTests {
         #expect(NetworkError.unknown.responseData == nil)
     }
 
+    @Test("responseData returns nil for noInternet")
+    func responseData_noInternet() {
+        #expect(NetworkError.noInternet.responseData == nil)
+    }
+
+    @Test("responseData returns nil for cancelled")
+    func responseData_cancelled() {
+        #expect(NetworkError.cancelled.responseData == nil)
+    }
+
     @Test("LocalizedError errorDescription works through Error protocol")
     func localizedDescription_throughErrorProtocol() {
         let error: Error = NetworkError.unauthorized(nil)
@@ -67,5 +77,15 @@ struct NetworkErrorTests {
     @Test("errorDescription for unknown")
     func errorDescription_unknown() {
         #expect(NetworkError.unknown.errorDescription == "An unknown error occurred")
+    }
+
+    @Test("errorDescription for noInternet")
+    func errorDescription_noInternet() {
+        #expect(NetworkError.noInternet.errorDescription == "No internet connection")
+    }
+
+    @Test("errorDescription for cancelled")
+    func errorDescription_cancelled() {
+        #expect(NetworkError.cancelled.errorDescription == "Request was cancelled")
     }
 }

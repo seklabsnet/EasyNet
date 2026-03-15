@@ -14,6 +14,8 @@ public enum NetworkError: Error {
     case serverError(String, Data? = nil)
     case noData
     case unauthorized(Data? = nil)
+    case noInternet
+    case cancelled
     case unknown
 
     public var responseData: Data? {
@@ -47,6 +49,10 @@ extension NetworkError: LocalizedError {
             return "No data received from server"
         case .unauthorized:
             return "Unauthorized access"
+        case .noInternet:
+            return "No internet connection"
+        case .cancelled:
+            return "Request was cancelled"
         case .unknown:
             return "An unknown error occurred"
         }

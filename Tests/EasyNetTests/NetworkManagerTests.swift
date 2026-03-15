@@ -47,9 +47,33 @@ struct NetworkManagerTests {
         }
     }
 
-    @Test("Unknown AFError maps to requestFailed")
-    func mapError_unknownError_returnsRequestFailed() {
+    @Test("Explicitly cancelled maps to cancelled")
+    func mapError_cancelled_returnsCancelled() {
         let error = AFError.explicitlyCancelled
+        let result = NetworkManager.mapError(error, responseData: nil)
+
+        guard case .cancelled = result else {
+            Issue.record("Expected .cancelled, got \(result)")
+            return
+        }
+    }
+
+    @Test("Not connected to internet maps to noInternet")
+    func mapError_noInternet_returnsNoInternet() {
+        let urlError = URLError(.notConnectedToInternet)
+        let error = AFError.sessionTaskFailed(error: urlError)
+        let result = NetworkManager.mapError(error, responseData: nil)
+
+        guard case .noInternet = result else {
+            Issue.record("Expected .noInternet, got \(result)")
+            return
+        }
+    }
+
+    @Test("Other session task errors map to requestFailed")
+    func mapError_otherSessionError_returnsRequestFailed() {
+        let urlError = URLError(.timedOut)
+        let error = AFError.sessionTaskFailed(error: urlError)
         let result = NetworkManager.mapError(error, responseData: nil)
 
         guard case .requestFailed = result else {
