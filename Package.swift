@@ -23,6 +23,10 @@ let package = Package(
                 .product(name: "Alamofire", package: "Alamofire")
             ],
             path: "Sources/EasyNet"
+        ),
+        .testTarget(
+            name: "EasyNetTests",
+            dependencies: ["EasyNet"]
         )
     ]
 )

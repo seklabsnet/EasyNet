@@ -8,17 +8,21 @@
 import Alamofire
 
 public protocol NetworkManagerProtocol: Sendable {
-    func execute<T: Decodable>(
+    func execute<T: Decodable & Sendable>(
         urlRequest: URLRequestConvertible
     ) async throws -> T
-    
+
     func executeCompletable(
         urlRequest: URLRequestConvertible
     ) async throws
-    
+
     func executeUpload<T: Decodable & Sendable>(
         urlRequest: URLRequestConvertible,
-        multipartFormData: @escaping (MultipartFormData) -> Void
+        multipartFormData: @escaping @Sendable (MultipartFormData) -> Void
     ) async throws -> T
-}
 
+    func executeUploadCompletable(
+        urlRequest: URLRequestConvertible,
+        multipartFormData: @escaping @Sendable (MultipartFormData) -> Void
+    ) async throws
+}

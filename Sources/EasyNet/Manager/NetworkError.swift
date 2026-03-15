@@ -15,7 +15,7 @@ public enum NetworkError: Error {
     case noData
     case unauthorized(Data? = nil)
     case unknown
-    
+
     public var responseData: Data? {
         switch self {
         case .requestFailed(_, let data):
@@ -30,8 +30,10 @@ public enum NetworkError: Error {
             return nil
         }
     }
-    
-    public var localizedDescription: String {
+}
+
+extension NetworkError: LocalizedError {
+    public var errorDescription: String? {
         switch self {
         case .invalidURL:
             return "Invalid URL"
@@ -43,7 +45,7 @@ public enum NetworkError: Error {
             return "Server error: \(message)"
         case .noData:
             return "No data received from server"
-        case .unauthorized(_):
+        case .unauthorized:
             return "Unauthorized access"
         case .unknown:
             return "An unknown error occurred"
