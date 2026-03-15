@@ -14,7 +14,7 @@ public final class NetworkServiceProvider<R: Encodable & Sendable>: URLRequestCo
     private let method: HTTPMethod
     private let data: R
     private let requestHeaders: [HTTPHeader]
-    
+
     public init(
         baseUrl: String,
         path: String,
@@ -28,38 +28,33 @@ public final class NetworkServiceProvider<R: Encodable & Sendable>: URLRequestCo
         self.data = data
         self.requestHeaders = headers
     }
-    
+
     public func asURLRequest() throws -> URLRequest {
-        // Properly construct URL by concatenating baseUrl and path
         let cleanBaseUrl = baseUrl.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
         let cleanPath = path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
         let fullUrl = "\(cleanBaseUrl)/\(cleanPath)"
-        
+
         let url = try fullUrl.asURL()
- 
+
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         request.headers = headers
         request.cachePolicy = .reloadIgnoringCacheData
- 
-        return try encoding.encode(request, with: params)
+
+        return try encoder.encode(data, into: request)
     }
-    
-    private var encoding: ParameterEncoding {
+
+    private var encoder: ParameterEncoder {
         switch method {
         case .post, .patch, .put:
-            return JSONEncoding.default
+            return JSONParameterEncoder.default
         case .get:
-            return URLEncoding.queryString
+            return URLEncodedFormParameterEncoder(destination: .queryString)
         default:
-            return URLEncoding.queryString
+            return URLEncodedFormParameterEncoder(destination: .queryString)
         }
     }
- 
-    private var params: Parameters? {
-        return data.asDictionary()
-    }
- 
+
     private var headers: HTTPHeaders {
         var httpHeaders = HTTPHeaders()
         requestHeaders.forEach { header in
